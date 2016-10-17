@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="qrcode">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/qrcode/jmagick.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/qrcode/QRCode.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/qrcode/Qrcodeen.jar!/" />
+      <root url="file://$MAVEN_REPOSITORY$/qrcode" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$MAVEN_REPOSITORY$/qrcode" recursive="false" />
+  </library>
+</component>

@@ -1,10 +1,15 @@
 package me.biezhi.wechat;
 
 import java.awt.EventQueue;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 
+import jp.sourceforge.qrcode.QRCodeDecoder;
+import jp.sourceforge.qrcode.data.QRCodeImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +45,7 @@ public class WechatRobot {
 		System.setProperty("https.protocols", "TLSv1");
 		System.setProperty("jsse.enableSNIExtension", "false");
 	}
-	
+
 	/**
 	 * 显示二维码
 	 * 
@@ -55,18 +60,71 @@ public class WechatRobot {
 		final File output = new File("temp.jpg");
 		HttpRequest.post(url, true, "t", "webwx", "_", DateKit.getCurrentUnixTime()).receive(output);
 
-		if (null != output && output.exists() && output.isFile()) {
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-						qrCodeFrame = new QRCodeFrame(output.getPath());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
+//		if (null != output && output.exists() && output.isFile()) {
+//			EventQueue.invokeLater(new Runnable() {
+//				public void run() {
+//					try {
+//						UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+//						qrCodeFrame = new QRCodeFrame(output.getPath());
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			});
+//		}
+		imgDecoder(output);
+	}
+
+	public void imgDecoder(File imageFile){
+		QRCodeDecoder decoder = new QRCodeDecoder();
+		//File imageFile = fileName;
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(imageFile);
+		} catch (IOException e) {
+			LOGGER.info("Error: " + e.getMessage());
 		}
+
+		LOGGER.info("识别二维码");
+		String decodedData = new String(decoder.decode(new J2SEImageGucas(image)));
+		LOGGER.info(decodedData);
+		LOGGER.info("Login...URL");
+		LOGGER.info("http://pan.baidu.com/share/qrcode?w=150&h=150&url="+decodedData);
+	}
+
+	static class J2SEImageGucas implements QRCodeImage {
+		BufferedImage image;
+
+		public J2SEImageGucas(BufferedImage image) {
+			this.image = image;
+		}
+
+		public int getWidth() {
+			return image.getWidth();
+		}
+
+		public int getHeight() {
+			return image.getHeight();
+		}
+
+		public int getPixel(int x, int y) {
+			return image.getRGB(x, y);
+		}
+	}
+
+	private String decode(String qrcodePicfilePath) {
+        /* 读取二维码图像数据 */
+		File imageFile = new File(qrcodePicfilePath);
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(imageFile);
+		} catch (IOException e) {
+			LOGGER.error("解码失败 " + e.getMessage());
+			return null;
+		}
+		QRCodeDecoder decoder = new QRCodeDecoder();
+		String decodedData = new String(decoder.decode(new J2SEImageGucas(image)));
+		return decodedData;
 	}
 
 	/**
@@ -115,7 +173,7 @@ public class WechatRobot {
 	}
 	
 	public void closeQrWindow() {
-		qrCodeFrame.dispose();
+//		qrCodeFrame.dispose();
 	}
 
 	/**
