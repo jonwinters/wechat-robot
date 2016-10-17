@@ -12,9 +12,7 @@ wechat-robot是基于微信网页版协议开发的普通微信号机器人程�
 
 [http://www.itpk.cn/robot.php](http://www.itpk.cn/robot.php)
 
-使用手机扫描二维码
-
-![](http://i13.tietuku.com/76a8af09f08243a7.png)
+已经改为控制台输出URL，拷贝到浏览器后扫描微信即可登录，方便在Linux下运行
 
 ### 控制台日志
 
